@@ -1,0 +1,1 @@
+Study Mate is a collaborative educational platform designed to connect students, peer tutors, and lecturers within a school environment for real-time academic assistance. By leveraging both online and in-person interactions, Study Mate bridges learning gaps, enhances academic performance, and fosters a supportive community.
