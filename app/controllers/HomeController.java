@@ -49,4 +49,7 @@ public class HomeController extends Controller {
     public Result settings(){return ok(views.html.settings.render());}
 
     public Result pricing(){return ok(views.html.pricing.render());}
+
+    public Result sessionDetails(){return ok(views.html.sessionDetails.render());}
+
 }
