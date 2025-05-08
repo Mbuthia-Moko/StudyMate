@@ -1,11 +1,14 @@
 package models;
 
 import io.ebean.Finder;
+import io.ebean.Model;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends Model {
     @Id
     public Long id;
     @Column(name = "full_name")
@@ -13,6 +16,9 @@ public class User {
     public String email;
     public  String role;
     public String password;
+
+    @OneToMany
+    public List<Session> sessions;
 
     public static Finder<Long, User> find = new Finder<>(User.class);
 
@@ -71,5 +77,17 @@ public class User {
 
     public static void setFind(Finder<Long, User> find) {
         User.find = find;
+    }
+
+    public static User findUser(String email, String password) {
+        return User.find.query().where().eq("email", email).eq("password", password).setMaxRows(1).findOne();
+    }
+
+    public List<Session> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(List<Session> sessions) {
+        this.sessions = sessions;
     }
 }

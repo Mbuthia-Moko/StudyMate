@@ -9,15 +9,18 @@ GET     /FAQ                controllers.HomeController.FAQ()
 
 GET     /about                controllers.HomeController.about()
 
-GET     /login                controllers.HomeController.login()
+GET     /login                controllers.HomeController.login(request: Request)
+POST    /login                controllers.HomeController.loginUser(request: Request)
 
-GET     /signup                controllers.HomeController.signup()
+GET     /signup                controllers.HomeController.signup(request: Request)
+POST    /signup                controllers.HomeController.signupUser(request: Request)
+
 
 GET     /forgotPassword       controllers.HomeController.forgotPassword()
 
 GET     /resetPassword       controllers.HomeController.resetPassword()
 
-GET    /home                controllers.HomeController.home()
+GET    /home                controllers.HomeController.home(request: Request)
 
 GET /learn controllers.HomeController.learn()
 
@@ -27,14 +30,14 @@ GET /notifications controllers.HomeController.notifications()
 
 GET /sessions controllers.HomeController.sessions()
 
-GET /settings controllers.HomeController.settings()
+GET /settings controllers.HomeController.settings(request: Request)
 
 GET /pricing controllers.HomeController.pricing()
 
 #temporarily logout will return to home page
-GET /logout controllers.HomeController.index()
+GET /logout controllers.HomeController.logout(request: Request)
 
-GET /sessionDetails controllers.HomeController.sessionDetails()
+GET /sessionDetails controllers.HomeController.sessionDetails(request: Request)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

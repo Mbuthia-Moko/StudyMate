@@ -53,6 +53,16 @@ EXECUTE stmt;
 END
 $$
 -- apply changes
+create table sessions (
+  id                            bigint auto_increment not null,
+  user_id                       bigint,
+  title                         varchar(255),
+  description                   varchar(255),
+  session_datetime              varchar(255),
+  duration_minutes              bigint,
+  constraint pk_sessions primary key (id)
+);
+
 create table users (
   id                            bigint auto_increment not null,
   full_name                     varchar(255),
@@ -62,9 +72,19 @@ create table users (
   constraint pk_users primary key (id)
 );
 
+-- foreign keys and indices
+create index ix_sessions_user_id on sessions (user_id);
+alter table sessions add constraint fk_sessions_user_id foreign key (user_id) references users (id) on delete restrict on update restrict;
+
 
 -- !Downs
 
+-- drop all foreign keys
+alter table sessions drop foreign key fk_sessions_user_id;
+drop index ix_sessions_user_id on sessions;
+
 -- drop all
+drop table if exists sessions;
+
 drop table if exists users;
 

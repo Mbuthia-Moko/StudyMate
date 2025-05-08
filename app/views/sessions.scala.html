@@ -1,4 +1,4 @@
-@()
+@(sessions: List[models.Session])
 
 @main("Sessions Page"){
 <!-- NAVBAR -->
@@ -29,13 +29,15 @@
         <h2 class="text-2xl font-semibold text-[#1f2945] mb-4">Upcoming Sessions</h2>
         <div class="space-y-4">
             <!-- Example -->
+            @for(session <- sessions){
             <div class="bg-white p-4 rounded-xl shadow flex justify-between items-center">
                 <div>
-                    <p class="font-bold">Biology Group Study</p>
-                    <p class="text-sm text-gray-500 mt-1">Tomorrow at 5:00 PM</p>
+                    <p class="font-bold">@session.title</p>
+                    <p class="text-sm text-gray-500 mt-1">@session.session_datetime</p>
                 </div>
                 <a href="sessionDetails" class="bg-[#4D63FF] text-white px-4 py-2 rounded-full hover:bg-[#3b4bbf] transition">View</a>
             </div>
+            }
         </div>
     </section>
 

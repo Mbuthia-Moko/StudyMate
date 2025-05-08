@@ -1,4 +1,4 @@
-@(users: List[models.User])
+@(user: models.User)
 
 @main("Settings Page"){
 <!-- NAVBAR -->
@@ -29,35 +29,39 @@
         <form class="space-y-4">
             <div>
                 <label class="block text-gray-700 font-medium mb-1" for="name">Full Name</label>
-                <input id="name" type="text" value="@users.get(0).name" class="w-full border rounded-lg p-2" disabled/>
+                <input id="name" type="text" value="@user.name" class="w-full border rounded-lg p-2" disabled/>
                 @*<p>@User.getName</p>*@
             </div>
             <div>
                 <label class="block text-gray-700 font-medium mb-1" for="email">Email Address</label>
-                <input id="email" type="email" value="@users.get(0).email" class="w-full border rounded-lg p-2" disabled />
+                <input id="email" type="email" value="@user.email" class="w-full border rounded-lg p-2" disabled />
             </div>
             <div>
                 <label class="block text-gray-700 font-medium mb-1" for="password">Change Password</label>
-                <input id="password" type="password" value="@users.get(0).password" class="w-full border rounded-lg p-2" disabled/>
+                <input id="password" type="password" value="@user.password" class="w-full border rounded-lg p-2" disabled/>
             </div>
             <button type="submit" class="bg-[#4D63FF] text-white px-6 py-2 rounded-full hover:bg-[#3b4bbf] transition">Edit Profile</button>
         </form>
     </section>
 
-    <section class="bg-white shadow-lg rounded-xl p-6 mb-8">
-        <h2 class="text-2xl font-semibold mb-4">Preferences</h2>
-        <form class="space-y-4">
-            <div class="flex items-center justify-between">
-                <span class="text-gray-700">Receive Email Notifications</span>
-                <input type="checkbox" class="h-5 w-5 text-[#4D63FF]" />
-            </div>
-            <div class="flex items-center justify-between">
-                <span class="text-gray-700">Dark Mode</span>
-                <input type="checkbox" class="h-5 w-5 text-[#4D63FF]" />
-            </div>
-            <button type="submit" class="bg-[#4D63FF] text-white px-6 py-2 rounded-full hover:bg-[#3b4bbf] transition">Save Preferences</button>
-        </form>
-    </section>
+<!--    <section class="bg-white shadow-lg rounded-xl p-6 mb-8">-->
+<!--        <h2 class="text-2xl font-semibold mb-4">Preferences</h2>-->
+<!--        <form class="space-y-4">-->
+<!--            <div class="flex items-center justify-between">-->
+<!--                <span class="text-gray-700">Receive Email Notifications</span>-->
+<!--                <label>-->
+<!--                    <input type="checkbox" class="h-5 w-5 text-[#4D63FF]" />-->
+<!--                </label>-->
+<!--            </div>-->
+<!--            <div class="flex items-center justify-between">-->
+<!--                <span class="text-gray-700">Dark Mode</span>-->
+<!--                <label>-->
+<!--                    <input type="checkbox" class="h-5 w-5 text-[#4D63FF]" />-->
+<!--                </label>-->
+<!--            </div>-->
+<!--            <button type="submit" class="bg-[#4D63FF] text-white px-6 py-2 rounded-full hover:bg-[#3b4bbf] transition">Save Preferences</button>-->
+<!--        </form>-->
+<!--    </section>-->
 
     <section class="bg-white shadow-lg rounded-xl p-6">
         <h2 class="text-2xl font-semibold mb-4">Subscription</h2>
@@ -120,8 +124,8 @@
     </div>
 </footer>
 <div>
-    @for(user <- users) {
-        <p>@user.name</p>
-    }
+<!--    @@for(user <- users) {-->
+<!--        <p>@user.name</p>-->
+<!--    }-->
 </div>
 }
