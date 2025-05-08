@@ -1,6 +1,10 @@
 package controllers;
 
+import models.User;
 import play.mvc.*;
+/* import views.html.*; */
+
+import java.util.List;
 
 //import javax.xml.transform.Result;
 
@@ -46,10 +50,30 @@ public class HomeController extends Controller {
 
     public Result sessions(){return ok(views.html.sessions.render());}
 
-    public Result settings(){return ok(views.html.settings.render());}
+    public Result settings(){
+/*
+    Static user addition to db example, save acts as insert if data doesn't exist & update if it does exist
+        User u = new User();
+        u.setId(1L);
+        u.setEmail("mbuthiamoko@gmail.com");
+        u.setName("Mbuthia Moko");
+        u.setRole("Student");
+        u.setPassword("C0nvincingPassw0rd");
+        u.save();
+
+        User u2 = new User(1L,"ALex", "alex@gmail.com", "student", "AlexL0v3sG0D");
+        u2.save();
+*/
+
+        List<User> users = User.find.all();
+//        User user1 = User.find.byId(1L);
+
+        return ok(views.html.settings.render(users));
+    }
 
     public Result pricing(){return ok(views.html.pricing.render());}
 
     public Result sessionDetails(){return ok(views.html.sessionDetails.render());}
+
 
 }

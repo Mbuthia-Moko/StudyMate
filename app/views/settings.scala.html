@@ -1,4 +1,5 @@
-@()
+@(users: List[models.User])
+
 @main("Settings Page"){
 <!-- NAVBAR -->
 <nav class="flex items-center justify-between bg-[#4D63FF] px-6 py-4">
@@ -28,17 +29,18 @@
         <form class="space-y-4">
             <div>
                 <label class="block text-gray-700 font-medium mb-1" for="name">Full Name</label>
-                <input id="name" type="text" placeholder="Your Name" class="w-full border rounded-lg p-2" />
+                <input id="name" type="text" value="@users.get(0).name" class="w-full border rounded-lg p-2" disabled/>
+                @*<p>@User.getName</p>*@
             </div>
             <div>
                 <label class="block text-gray-700 font-medium mb-1" for="email">Email Address</label>
-                <input id="email" type="email" placeholder="you@@example.com" class="w-full border rounded-lg p-2" />
+                <input id="email" type="email" value="@users.get(0).email" class="w-full border rounded-lg p-2" disabled />
             </div>
             <div>
                 <label class="block text-gray-700 font-medium mb-1" for="password">Change Password</label>
-                <input id="password" type="password" placeholder="New Password" class="w-full border rounded-lg p-2" />
+                <input id="password" type="password" value="@users.get(0).password" class="w-full border rounded-lg p-2" disabled/>
             </div>
-            <button type="submit" class="bg-[#4D63FF] text-white px-6 py-2 rounded-full hover:bg-[#3b4bbf] transition">Save Profile</button>
+            <button type="submit" class="bg-[#4D63FF] text-white px-6 py-2 rounded-full hover:bg-[#3b4bbf] transition">Edit Profile</button>
         </form>
     </section>
 
@@ -117,4 +119,9 @@
         </div>
     </div>
 </footer>
+<div>
+    @for(user <- users) {
+        <p>@user.name</p>
+    }
+</div>
 }
