@@ -28,9 +28,9 @@
     <section class="mb-12">
         <h2 class="text-2xl font-semibold text-[#1f2945] mb-4">Upcoming Sessions</h2>
         <div class="space-y-4">
-            <!-- Example -->
+            <!-- Sessions -->
             @for(session <- sessions){
-            <div class="bg-white p-4 rounded-xl shadow flex justify-between items-center">
+            <div class="bg-white p-4 rounded-xl shadow hover:shadow-black flex justify-between items-center">
                 <div>
                     <p class="font-bold">@session.title</p>
                     <p class="text-sm text-gray-500 mt-1">@session.session_datetime</p>

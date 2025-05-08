@@ -11,12 +11,12 @@
     </a>
     <ul class="flex gap-6 text-white">
         <li><a class="underline underline-offset-4" href="home">Home</a></li>
-        <li><a href="learn">Learn</a></li>
-        <li><a href="teach">Teach</a></li>
-        <li><a href="notifications">Notifications</a></li>
-        <li><a href="sessions">Sessions</a></li>
-        <li><a href="settings">Settings</a></li>
-        <li><a href="logout">Log out</a></li>
+        <li><a class="hover:text-yellow-400" href="learn">Learn</a></li>
+        <li><a class="hover:text-yellow-400" href="teach">Teach</a></li>
+        <li><a class="hover:text-yellow-400" href="notifications">Notifications</a></li>
+        <li><a class="hover:text-yellow-400" href="sessions">Sessions</a></li>
+        <li><a class="hover:text-yellow-400" href="settings">Settings</a></li>
+        <li><a class="hover:text-red-600" href="logout">Log out</a></li>
     </ul>
 </nav>
 
@@ -30,7 +30,7 @@
             <i class="fa-solid fa-user-group text-3xl text-[#4D63FF]"></i>
             <div>
                 <p class="font-semibold text-lg">Learn</p>
-                <p class="text-sm text-gray-500">Connect with a peer/ tutor based on your needs</p>
+                <p class="text-sm text-gray-500">Connect with a peer or tutor.</p>
             </div>
         </a>
 <!--        <a href="schedule" class="bg-white shadow-lg rounded-xl p-6 flex items-center gap-4 hover:shadow-black transition">-->
@@ -67,7 +67,7 @@
     <section>
         <h2 class="text-2xl font-semibold text-[#1f2945] mb-4">Upcoming Sessions</h2>
         <div class="space-y-4">
-            <!-- Example Session Card -->
+            <!-- Session Card -->
             @for(session <- sessions){
             <div class="bg-white p-4 rounded-xl shadow hover:shadow-black flex justify-between items-center">
                 <div>
@@ -77,7 +77,6 @@
                 <a href="sessionDetails" class="bg-[#4D63FF] text-white px-4 py-2 rounded-full hover:bg-[#3b4bbf] transition">View</a>
             </div>
             }
-            <!-- Repeat for other sessions -->
         </div>
     </section>
 </main>

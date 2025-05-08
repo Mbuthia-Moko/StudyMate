@@ -64,14 +64,30 @@ public class HomeController extends Controller {
         return ok(views.html.home.render(user,sessions));
     }
 
-    public Result learn(){return ok(views.html.learn.render());}
+    public Result learn(){
+        String userType = "tutor";
+        List <User> tutors = User.find.query().where().eq("role", userType).findList();
+
+//        List<Session> sessions = Session.find.query().where().eq("user.id", user.id).findList();
+
+        return ok(views.html.learn.render(tutors));
+    }
 
     public Result teach(){return ok(views.html.teach.render());}
 
-    public Result notifications(){return ok(views.html.notifications.render());}
+    public Result notifications(Http.Request request){
+        String email = request.session().get("user").get();
+        User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
 
-    public Result sessions(){
-        List<Session> sessions = Session.find.all();
+        List<Session> sessions = Session.find.query().where().eq("user.id", user.id).findList();
+        return ok(views.html.notifications.render(sessions));
+    }
+
+    public Result sessions(Http.Request request){
+        String email = request.session().get("user").get();
+        User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
+
+        List<Session> sessions = Session.find.query().where().eq("user.id", user.id).findList();
         return ok(views.html.sessions.render(sessions));
     }
 
@@ -131,6 +147,7 @@ public class HomeController extends Controller {
         String name = data.get("name");
         String email = data.get("email");
         String password = data.get("password");
+        String userType = data.get("userType");
         if(email.isEmpty() || password.isEmpty()) {
             return badRequest(views.html.signup.render(request)).flashing("error", "Wrong Username or Password");
         }
@@ -139,6 +156,7 @@ public class HomeController extends Controller {
         user.setName(name);
         user.setEmail(email);
         user.setPassword(password);
+        user.setRole(userType);
         user.save();
 
 

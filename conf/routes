@@ -26,9 +26,9 @@ GET /learn controllers.HomeController.learn()
 
 GET /teach controllers.HomeController.teach()
 
-GET /notifications controllers.HomeController.notifications()
+GET /notifications controllers.HomeController.notifications(request: Request)
 
-GET /sessions controllers.HomeController.sessions()
+GET /sessions controllers.HomeController.sessions(request: Request)
 
 GET /settings controllers.HomeController.settings(request: Request)
 

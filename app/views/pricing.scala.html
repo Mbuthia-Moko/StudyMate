@@ -54,11 +54,13 @@
             <a href="home" class="bg-white w-full text-black rounded-full py-1.5 text-center cursor-pointer">Subscribe</a>
         </div>
 
-        <div class="bg-[#4D63FF] shadow-xl hover:-translate-y-4 duration-300 ease-in-out hover:shadow-[#4D63FF] p-8 rounded-xl flex flex-col justify-between gap-14 md:w-80">
+        <form action="" method="post" class="bg-[#4D63FF] shadow-xl hover:-translate-y-4 duration-300 ease-in-out hover:shadow-[#4D63FF] p-8 rounded-xl flex flex-col justify-between gap-14 md:w-80">
             <div class="flex flex-col justify-evenly gap-10 p-6">
                 <div>
                     <p class=" font-bold text-xl">Premium Plan</p>
                     <p class="text-sm text-white">No ads, Unlimited help requests</p>
+                    <label for="subscription"></label>
+                    <input hidden id="subscription" name="subscription" type="text" value="Premium (1,500 Ksh/month)">
                 </div>
                 <h1 class="text-4xl text-[#1f2945] font-bold">1500 Ksh</h1>
                 <div class="text-md text-gray-600 flex flex-col gap-2">
@@ -68,8 +70,9 @@
                 </div>
             </div>
             <!--Button, form -->
-            <a href="home" class="bg-[#1f2943] w-full text-white rounded-full py-1.5 text-center cursor-pointer">Subscribe</a>
-        </div>
+            <button type="submit" class="bg-[#1f2943] w-full text-white rounded-full py-1.5 text-center cursor-pointer">Subscribe</button>
+<!--            <a href="home" class="bg-[#1f2943] w-full text-white rounded-full py-1.5 text-center cursor-pointer">Subscribe</a>-->
+        </form>
     </div>
 </main>
 <footer class="bg-gray-900 text-white py-12 mt-auto">

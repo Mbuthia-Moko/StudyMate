@@ -18,6 +18,23 @@
     </ul>
 </nav>
 <main class="w-screen h-screen flex items-center justify-center bg-gray-200">
+    @if(request.flash().get("error").isPresent()) {
+    <div class="mb-4 flex items-center justify-between rounded-lg bg-red-100 p-4 text-red-800">
+        <span>@request.flash().get("error").orElse("An error occurred")</span>
+        <button type="button" class="text-red-500 hover:text-red-700" onclick="this.parentElement.remove()">
+            &times;
+        </button>
+    </div>
+    } else if(request.flash().get("success").isPresent()) {
+    <div class="mb-4 flex items-center justify-between rounded-lg bg-green-100 p-4 text-green-800">
+        <span>@request.flash().get("success").orElse("Success")</span>
+        <button type="button" class="text-green-500 hover:text-green-700" onclick="this.parentElement.remove()">
+            &times;
+        </button>
+    </div>
+    }
+
+
     <div class="p-4 bg-[#4D63FF] rounded-xl h-[490px] w-96 absolute z-0"></div>
     <div class="bg-[#fffff0] w-96 p-10 rounded-xl z-10 -ml-10 md:hover:-ml-44 ease-in-out duration-1000">
         <form method="post" action="@routes.HomeController.loginUser()">
@@ -25,11 +42,11 @@
             <p class="text-3xl font-bold font-sans">Log in</p>
             <div class="pt-4">
                 <label for="u-name" class="text-sm font-sans font-semibold">E-mail</label>
-                <input type="email" name="email" id="u-name" class="border border-gray-400 h-12 w-full rounded-lg hover:border-gray-800" required>
+                <input type="email" name="email" id="u-name" class="border border-gray-400 h-12 w-full rounded-lg hover:border-gray-800 p-2" required>
             </div>
             <div class="pt-4">
                 <label for="p-word" class="text-sm font-sans font-semibold">Password</label>
-                <input type="password" name="password" id="p-word" class="border border-gray-400 h-12 w-full rounded-lg hover:border-gray-800" required>
+                <input type="password" name="password" id="p-word" class="border border-gray-400 h-12 w-full rounded-lg hover:border-gray-800 p-2" required>
             </div>
             <div class="flex items-center justify-center gap-2 pt-4">
                 <!-- temporarily using an anchor to login for FE purposes button commented below, remember to switch div to form -->
