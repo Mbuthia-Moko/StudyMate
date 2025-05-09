@@ -63,12 +63,23 @@ create table sessions (
   constraint pk_sessions primary key (id)
 );
 
+create table tutor_application (
+  id                            bigint auto_increment not null,
+  tutor_name                    varchar(255),
+  user_id                       bigint,
+  subject_expertise             varchar(255),
+  bio                           varchar(255),
+  tutor_email                   varchar(255),
+  constraint pk_tutor_application primary key (id)
+);
+
 create table users (
   id                            bigint auto_increment not null,
   full_name                     varchar(255),
   email                         varchar(255),
   role                          varchar(255),
   password                      varchar(255),
+  bio                           varchar(255),
   constraint pk_users primary key (id)
 );
 
@@ -85,6 +96,8 @@ drop index ix_sessions_user_id on sessions;
 
 -- drop all
 drop table if exists sessions;
+
+drop table if exists tutor_application;
 
 drop table if exists users;
 

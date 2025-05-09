@@ -1,4 +1,5 @@
-@()
+@()(implicit request : play.mvc.Http.Request, tutor: models.TutorApplication)
+@import helper._
 @main("Teaching Page"){
 <!-- NAVBAR -->
 <nav class="flex items-center justify-between bg-[#4D63FF] px-6 py-4">
@@ -27,42 +28,56 @@
     <!-- Tutor Application -->
     <section class="bg-white p-6 rounded-xl shadow mb-8">
         <h2 class="text-2xl font-semibold text-[#4D63FF] mb-4">Apply to Tutor</h2>
-        <form class="space-y-4">
+        <form class="space-y-4" method="post" action="@routes.HomeController.tutorApplication()">
+            @CSRF.formField
+            @if(tutor != null){
+            <h1 class="text-lg text-green-400 font-semibold" @if(tutor.bio != null){flex}else{hidden}>Your Request is being reviewed</h1>
             <div>
                 <label class="block text-sm font-medium text-gray-700">Subject Expertise</label>
-                <input type="text" placeholder="e.g. Chemistry" class="w-full border rounded-lg p-3"/>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Hourly Rate (Ksh)</label>
-                <input type="number" placeholder="e.g. 500" class="w-full border rounded-lg p-3"/>
+                <input type="text" value="@tutor.subject_expertise" class="w-full border rounded-lg p-3" @if(tutor.subject_expertise != null){disabled}/>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700">Brief Bio</label>
-                <textarea rows="3" class="w-full border rounded-lg p-3"></textarea>
+                <input value="@tutor.bio" class="w-full border rounded-lg p-3" @if(tutor.bio != null){disabled}>
             </div>
-            <button type="submit" class="bg-[#4D63FF] text-white px-6 py-3 rounded-full hover:bg-[#3b4bbf] transition">
+            <button type="submit" class="bg-[#4D63FF] text-white px-6 py-3 rounded-full hover:bg-[#3b4bbf] transition" @if(tutor.bio != null){disabled}>
                 Submit Application
             </button>
+            }else{
+                <h1 class="text-lg text-green-400 font-semibold" hidden>Your Request is being reviewed</h1>
+                <div>
+                    <label for="subjects" class="block text-sm font-medium text-gray-700">Subject Expertise</label>
+                    <input name="subjects" id="subjects" type="text" class="w-full border rounded-lg p-3"/>
+                </div>
+                <div>
+                    <label for="tutorBio" class="block text-sm font-medium text-gray-700">Brief Bio</label>
+                    <input id="tutorBio" name="tutorBio" class="w-full border rounded-lg p-3">
+                </div>
+                <button type="submit" class="bg-[#4D63FF] text-white px-6 py-3 rounded-full hover:bg-[#3b4bbf] transition">
+                    Submit Application
+                </button>
+            }
         </form>
     </section>
 
     <!-- Incoming Help Requests -->
-    <section>
-        <h2 class="text-2xl font-semibold text-[#1f2945] mb-4">Help Requests</h2>
-        <div class="space-y-4">
-            <!-- Example request -->
-            <div class="bg-white p-4 rounded-xl shadow flex justify-between items-center">
-                <div>
-                    <p class="font-bold">“Need help with Statistics homework”</p>
-                    <p class="text-sm text-gray-500">Requested by: Alice W.</p>
-                </div>
-                <button class="bg-[#4D63FF] text-white px-4 py-2 rounded-full hover:bg-[#3b4bbf] transition">
-                    Claim
-                </button>
-            </div>
-            <!-- …more requests… -->
-        </div>
-    </section>
+<!--    If is tutor show this hide application form!!-->
+<!--    <section>-->
+<!--        <h2 class="text-2xl font-semibold text-[#1f2945] mb-4">Help Requests</h2>-->
+<!--        <div class="space-y-4">-->
+<!--            &lt;!&ndash; Example request &ndash;&gt;-->
+<!--            <div class="bg-white p-4 rounded-xl shadow flex justify-between items-center">-->
+<!--                <div>-->
+<!--                    <p class="font-bold">“Need help with Statistics homework”</p>-->
+<!--                    <p class="text-sm text-gray-500">Requested by: Alice W.</p>-->
+<!--                </div>-->
+<!--                <button class="bg-[#4D63FF] text-white px-4 py-2 rounded-full hover:bg-[#3b4bbf] transition">-->
+<!--                    Claim-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; …more requests… &ndash;&gt;-->
+<!--        </div>-->
+<!--    </section>-->
 </main>
 
 <!-- FOOTER -->

@@ -24,7 +24,10 @@ GET    /home                controllers.HomeController.home(request: Request)
 
 GET /learn controllers.HomeController.learn()
 
-GET /teach controllers.HomeController.teach()
+GET /teach controllers.HomeController.teach(request: Request)
+POST /tutorApplication controllers.HomeController.tutorApplication(request: Request)
+
+GET /createSession/:tutorId controllers.HomeController.createSession(tutorId: Long, request: Request)
 
 GET /notifications controllers.HomeController.notifications(request: Request)
 
@@ -33,6 +36,8 @@ GET /sessions controllers.HomeController.sessions(request: Request)
 GET /settings controllers.HomeController.settings(request: Request)
 
 GET /pricing controllers.HomeController.pricing()
+
+GET /admin controllers.HomeController.admin()
 
 #temporarily logout will return to home page
 GET /logout controllers.HomeController.logout(request: Request)

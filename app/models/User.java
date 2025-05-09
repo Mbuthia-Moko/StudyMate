@@ -16,6 +16,7 @@ public class User extends Model {
     public String email;
     public  String role;
     public String password;
+    public String bio;
 
     @OneToMany
     public List<Session> sessions;
@@ -26,12 +27,13 @@ public class User extends Model {
     public User(){
     }
 
-    public User(Long id, String name, String email, String role, String password){
+    public User(Long id, String name, String email, String role, String password, String bio){
         this.id =id;
         this.name = name;
         this.email = email;
         this.role = role;
         this.password = password;
+        this.bio = bio;
     }
 
     //Getters and Setters
@@ -81,6 +83,14 @@ public class User extends Model {
 
     public static User findUser(String email, String password) {
         return User.find.query().where().eq("email", email).eq("password", password).setMaxRows(1).findOne();
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public List<Session> getSessions() {

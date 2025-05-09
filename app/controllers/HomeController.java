@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Session;
+import models.TutorApplication;
 import models.User;
 import play.data.DynamicForm;
 import play.data.FormFactory;
@@ -73,7 +74,12 @@ public class HomeController extends Controller {
         return ok(views.html.learn.render(tutors));
     }
 
-    public Result teach(){return ok(views.html.teach.render());}
+    public Result teach(Http.Request request){
+        String email = request.session().get("user").get();
+        TutorApplication tutor = TutorApplication.find.query().where().eq("tutor_email", email).setMaxRows(1).findOne();
+
+        return ok(views.html.teach.render(request, tutor));
+    }
 
     public Result notifications(Http.Request request){
         String email = request.session().get("user").get();
@@ -148,6 +154,7 @@ public class HomeController extends Controller {
         String email = data.get("email");
         String password = data.get("password");
         String userType = data.get("userType");
+        String bio = data.get("bio");
         if(email.isEmpty() || password.isEmpty()) {
             return badRequest(views.html.signup.render(request)).flashing("error", "Wrong Username or Password");
         }
@@ -157,6 +164,7 @@ public class HomeController extends Controller {
         user.setEmail(email);
         user.setPassword(password);
         user.setRole(userType);
+        user.setBio(bio);
         user.save();
 
 
@@ -165,5 +173,42 @@ public class HomeController extends Controller {
 
         return redirect(routes.HomeController.login());
 
+    }
+    public Result tutorApplication(Http.Request request){
+        DynamicForm data = formFactory.form().bindFromRequest(request);
+        String email = request.session().get("user").get();
+        User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
+
+
+        Long User_id = user.id;
+        String name = user.name;
+        String subjects = data.get("subjects");
+        String bio = data.get("tutorBio");
+        String email1 = user.email;
+
+
+        TutorApplication tutor = new TutorApplication();
+
+        tutor.setTutor_name(name);
+        tutor.setUser_id(User_id);
+        tutor.setSubject_expertise(subjects);
+        tutor.setBio(bio);
+        tutor.setTutor_email(email1);
+        tutor.save();
+        return ok(views.html.teach.render(request, tutor));
+    }
+    public Result admin(){
+        List<User> users = User.find.all();
+        List<TutorApplication> tutors = TutorApplication.find.all();
+        return ok(views.html.admin.render(users, tutors));
+    }
+    public Result createSession(Long tutorId, Http.Request request){
+        User tutor = User.find.byId(tutorId);
+        // Return tutor details here as well to get them on the view
+//        TutorApplication tutorDetails = TutorApplication.find.byId();
+//        String userType = "tutor";
+//        User tutor = User.find.query().where().eq("role", userType).findOne();
+        //.where().eq("email", email).setMaxRows(1).findOne()
+        return  ok(views.html.createSession.render(request,tutor));
     }
 }
