@@ -3,6 +3,9 @@ package models;
 import io.ebean.Finder;
 import io.ebean.Model;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name ="sessions")
 public class Session extends Model {
@@ -10,22 +13,28 @@ public class Session extends Model {
     public  Long id;
 
     @ManyToOne
-    public User user;
+    @JoinColumn(name = "student_id")
+    public User student_id;
 
-    public String title;
-    public String description;
-    public String session_datetime;
-    public Long duration_minutes;
+    public Long tutor_id;
+    @Column(name = "subjectDescription")
+    public String subjectDescription;
+    public String location;
+    public LocalDateTime date_time;
+    public String status;
+    public Integer duration;
+
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
 
     public static Finder<Long, Session> find = new Finder<>(Session.class);
-
-    public static Finder<Long, Session> getFind() {
-        return find;
-    }
-
-    public static void setFind(Finder<Long, Session> find) {
-        Session.find = find;
-    }
 
     public Long getId() {
         return id;
@@ -35,45 +44,61 @@ public class Session extends Model {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public User getStudent_id() {
+        return student_id;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setStudent_id(User student_id) {
+        this.student_id = student_id;
     }
 
-    public String getTitle() {
-        return title;
+    public Long getTutor_id() {
+        return tutor_id;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTutor_id(Long tutor_id) {
+        this.tutor_id = tutor_id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getSubjectDescription() {
+        return subjectDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setSubjectDescription(String subjectDescription) {
+        this.subjectDescription = subjectDescription;
     }
 
-    public String getSession_datetime() {
-        return session_datetime;
+    public String getLocation() {
+        return location;
     }
 
-    public void setSession_datetime(String session_datetime) {
-        this.session_datetime = session_datetime;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public Long getDuration_minutes() {
-        return duration_minutes;
+    public LocalDateTime getDate_time() {
+        return date_time;
     }
 
-    public void setDuration_minutes(Long duration_minutes) {
-        this.duration_minutes = duration_minutes;
+    public void setDate_time(LocalDateTime date_time) {
+        this.date_time = date_time;
     }
 
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    //    public static Finder<Long, Session> find = new Finder<>(Session.class);
+//
+    public static Finder<Long, Session> getFind() {
+        return find;
+    }
+
+    public static void setFind(Finder<Long, Session> find) {
+        Session.find = find;
+    }
 }

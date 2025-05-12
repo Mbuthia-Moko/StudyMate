@@ -30,30 +30,82 @@
         <div class="space-y-4">
             <!-- Sessions -->
             @for(session <- sessions){
+            @if(session.status == "confirmed"){
+                <div class="bg-white p-4 rounded-xl shadow hover:shadow-black flex justify-between items-center">
+                    <div>
+                        <p class="font-bold">@session.subjectDescription</p>
+                        <p class="text-sm text-gray-500 mt-1">@session.date_time</p>
+                    </div>
+                    <a href="@routes.HomeController.sessionDetails(session.getId())" class="bg-[#4D63FF] text-white px-4 py-2 rounded-full hover:bg-[#3b4bbf] transition">View</a>
+                </div>
+            }}
+
+            <h2 class="text-2xl font-semibold text-[#1f2945] mb-4">Pending Sessions</h2>
+            @for(session <- sessions){
+            @if(session.status =="pending"){
             <div class="bg-white p-4 rounded-xl shadow hover:shadow-black flex justify-between items-center">
                 <div>
-                    <p class="font-bold">@session.title</p>
-                    <p class="text-sm text-gray-500 mt-1">@session.session_datetime</p>
+                    <p class="font-bold">@session.subjectDescription</p>
+                    <p class="text-sm text-gray-500 mt-1">@session.date_time</p>
                 </div>
-                <a href="sessionDetails" class="bg-[#4D63FF] text-white px-4 py-2 rounded-full hover:bg-[#3b4bbf] transition">View</a>
+                <a href="@routes.HomeController.sessionDetails(session.getId())" class="bg-[#4D63FF] text-white px-4 py-2 rounded-full hover:bg-[#3b4bbf] transition">View</a>
             </div>
+            }
+            }
+            <h2 class="text-2xl font-semibold text-[#1f2945] mb-4">Rejected Sessions</h2>
+            @for(session <- sessions){
+            @if(session.status =="rejected"){
+            <div class="bg-white p-4 rounded-xl shadow hover:shadow-black flex justify-between items-center">
+                <div>
+                    <p class="font-bold">@session.subjectDescription</p>
+                    <p class="text-sm text-gray-500 mt-1">@session.date_time</p>
+                </div>
+                <span class="text-blue-500">Rejected</span>
+
+            </div>
+            }
+            }
+            <h2 class="text-2xl font-semibold text-[#1f2945] mb-4">Cancelled Sessions</h2>
+            @for(session <- sessions){
+            @if(session.status =="cancelled"){
+            <div class="bg-white p-4 rounded-xl shadow hover:shadow-black flex justify-between items-center">
+                <div>
+                    <p class="font-bold">@session.subjectDescription</p>
+                    <p class="text-sm text-gray-500 mt-1">@session.date_time</p>
+                </div>
+                <span class="text-red-500">Cancelled</span>
+            </div>
+            }
+            }
+
+            <h2 class="text-2xl font-semibold text-[#1f2945] mb-4">Completed Sessions</h2>
+            @for(session <- sessions){
+            @if(session.status =="completed"){
+            <div class="bg-white p-4 rounded-xl shadow hover:shadow-black flex justify-between items-center">
+                <div>
+                    <p class="font-bold">@session.subjectDescription</p>
+                    <p class="text-sm text-gray-500 mt-1">@session.date_time</p>
+                </div>
+                <span class="text-gray-500">Completed</span>
+            </div>
+            }
             }
         </div>
     </section>
 
     <!-- Past -->
-    <section>
-        <h2 class="text-2xl font-semibold text-[#1f2945] mb-4">Past Sessions</h2>
-        <div class="space-y-4">
-            <div class="bg-white p-4 rounded-xl shadow flex justify-between items-center">
-                <div>
-                    <p class="font-bold">Chemistry Tutoring</p>
-                    <p class="text-sm text-gray-500 mt-1">Apr 25, 2025 at 2:00 PM</p>
-                </div>
-                <span class="text-gray-500">Completed</span>
-            </div>
-        </div>
-    </section>
+<!--    <section>-->
+<!--        <h2 class="text-2xl font-semibold text-[#1f2945] mb-4">Past Sessions</h2>-->
+<!--        <div class="space-y-4">-->
+<!--            <div class="bg-white p-4 rounded-xl shadow flex justify-between items-center">-->
+<!--                <div>-->
+<!--                    <p class="font-bold">Chemistry Tutoring</p>-->
+<!--                    <p class="text-sm text-gray-500 mt-1">Apr 25, 2025 at 2:00 PM</p>-->
+<!--                </div>-->
+<!--                <span class="text-gray-500">Completed</span>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </section>-->
 </main>
 
 <!-- FOOTER -->

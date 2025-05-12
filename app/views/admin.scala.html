@@ -11,6 +11,7 @@
     <ul class="flex gap-6 text-white">
         <li><a class="hover:text-yellow-400" href="#manageUsers">Manage Users</a></li>
         <li><a class="hover:text-yellow-400" href="#tutorApplications">Tutor Applications</a></li>
+        <li><a class="hover:text-yellow-400" href="#tutorApplications">Settings</a></li>
         <li><a class="hover:text-red-400" href="logout">Log out</a></li>
     </ul>
 </nav>
@@ -71,14 +72,14 @@
 
             @for(tutor <- tutors){
             <tr class="border-b hover:bg-gray-300">
+
                 <td class="py-3 px-6">@tutor.id</td>
                 <td class="py-3 px-6 capitalize">@tutor.tutor_name</td>
-<!--                <td class="py-3 px-6 lowercase">@@user.email</td>-->
                 <td class="py-3 px-6 capitalize">@tutor.subject_expertise</td>
                 <td class="py-3 px-6 capitalize">@tutor.bio</td>
                 <td class="py-3 px-6 flex space-x-2">
-                    <button class="bg-blue-500 text-white px-3 py-1 rounded">Approve</button>
-                    <button class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                    <a href="@routes.HomeController.approveTutor(tutor.user_id)" class="bg-blue-500 text-white px-3 py-1 rounded">Approve</a>
+                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Reject</button>
                 </td>
             </tr>
             }

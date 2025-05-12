@@ -9,6 +9,7 @@ import play.mvc.*;
 /* import views.html.*; */
 
 import javax.inject.Inject;
+import java.time.LocalDateTime;
 import java.util.List;
 
 //import javax.xml.transform.Result;
@@ -58,7 +59,7 @@ public class HomeController extends Controller {
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
 
-        List<Session> sessions = Session.find.query().where().eq("user.id", user.id).findList();
+        List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
 //        List<User> users = User.find.all();
 //        List<Session> sessions = Session.find.all();
 
@@ -85,7 +86,7 @@ public class HomeController extends Controller {
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
 
-        List<Session> sessions = Session.find.query().where().eq("user.id", user.id).findList();
+        List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
         return ok(views.html.notifications.render(sessions));
     }
 
@@ -93,7 +94,7 @@ public class HomeController extends Controller {
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
 
-        List<Session> sessions = Session.find.query().where().eq("user.id", user.id).findList();
+        List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
         return ok(views.html.sessions.render(sessions));
     }
 
@@ -114,8 +115,8 @@ public class HomeController extends Controller {
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
 
-        List<Session> sessions = Session.find.query().where().eq("user.id", user.id).findList();
-        List<User> users = User.find.all();
+//        List<Session> sessions = Session.find.query().where().eq("user.id", user.id).findList();
+//        List<User> users = User.find.all();
 //        User user1 = User.find.byId(1L);
 
         return ok(views.html.settings.render(user));
@@ -123,12 +124,17 @@ public class HomeController extends Controller {
 
     public Result pricing(){return ok(views.html.pricing.render());}
 
-    public Result sessionDetails(Http.Request request){
+    public Result sessionDetails(Long SessionId, Http.Request request){
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
 
-        List<Session> sessions = Session.find.query().where().eq("user.id", user.id).findList();
-        return ok(views.html.sessionDetails.render(sessions));
+//        String userType = "tutor";
+        Session sessionDetails = Session.find.query().where().eq("id", SessionId).findOne();
+
+//        List <User> tutors = User.find.query().where().eq("role", "tutors").findList();
+        //
+//        List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
+        return ok(views.html.sessionDetails.render(sessionDetails));
     }
 
     public Result loginUser(Http.Request request) {
@@ -203,12 +209,51 @@ public class HomeController extends Controller {
         return ok(views.html.admin.render(users, tutors));
     }
     public Result createSession(Long tutorId, Http.Request request){
-        User tutor = User.find.byId(tutorId);
-        // Return tutor details here as well to get them on the view
-//        TutorApplication tutorDetails = TutorApplication.find.byId();
-//        String userType = "tutor";
-//        User tutor = User.find.query().where().eq("role", userType).findOne();
-        //.where().eq("email", email).setMaxRows(1).findOne()
+        //User tutor = User.find.byId(tutorId);
+
+        String userType = "tutor";
+         User tutor = User.find.query().where().eq("id", tutorId).findOne();
         return  ok(views.html.createSession.render(request,tutor));
+    }
+
+    public Result submitSession(Http.Request request){
+        DynamicForm data = formFactory.form().bindFromRequest(request);
+
+        String email = request.session().get("user").get();
+        User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
+
+        Long student_id = user.id;
+        Long tutor_id = Long.valueOf(data.get("tutorId"));
+        String subjectDescription = data.get("topic");
+        String location = data.get("location");
+        LocalDateTime date_time = LocalDateTime.parse(data.get("dateTime"));
+        String status = data.get("status");
+        Integer duration = Integer.valueOf(data.get("duration"));
+
+        Session session = new Session();
+
+        session.setStudent_id(user);
+        session.setTutor_id(tutor_id);
+        session.setSubjectDescription(subjectDescription);
+        session.setLocation(location);
+        session.setDate_time(date_time);
+        session.setStatus(status);
+        session.setDuration(duration);
+
+        session.save();
+
+        List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
+        return ok(views.html.sessions.render(sessions));
+    }
+    public Result approveTutor(Long tutorId){
+        List<User> users = User.find.all();
+        List<TutorApplication> tutors = TutorApplication.find.all();
+        User user = User.find.query().where().eq("id", tutorId).findOne();
+
+        String role = "tutor";
+        user.setRole(role);
+
+        user.update();
+        return ok(views.html.admin.render(users, tutors));
     }
 }

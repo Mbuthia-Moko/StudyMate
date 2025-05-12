@@ -28,13 +28,15 @@
     <div class="space-y-4">
         <!--notifications -->
         @for(session <- sessions){
+        @if(session.status == "confirmed"){
         <div class="bg-white p-4 rounded-xl shadow flex items-start gap-4">
             <i class="fa-regular fa-bell text-2xl text-[#4D63FF] mt-1"></i>
             <div>
-                <p><span class="font-semibold">Reminder:</span> @session.title session at @session.session_datetime.</p>
-                <p class="text-sm text-gray-500 mt-1">@session.session_datetime</p>
+                <p><span class="font-semibold">Reminder:</span> @session.subjectDescription session at @session.date_time.</p>
+                <p class="text-sm text-gray-500 mt-1">@session.date_time</p>
             </div>
         </div>
+        }
         }
 
         <!-- Build for loop for messages here -->

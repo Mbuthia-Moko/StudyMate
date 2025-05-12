@@ -55,11 +55,13 @@ $$
 -- apply changes
 create table sessions (
   id                            bigint auto_increment not null,
-  user_id                       bigint,
-  title                         varchar(255),
-  description                   varchar(255),
-  session_datetime              varchar(255),
-  duration_minutes              bigint,
+  student_id                    bigint,
+  tutor_id                      bigint,
+  subjectDescription            varchar(255),
+  location                      varchar(255),
+  date_time                     datetime,
+  status                        varchar(255),
+  duration                      integer,
   constraint pk_sessions primary key (id)
 );
 
@@ -84,15 +86,15 @@ create table users (
 );
 
 -- foreign keys and indices
-create index ix_sessions_user_id on sessions (user_id);
-alter table sessions add constraint fk_sessions_user_id foreign key (user_id) references users (id) on delete restrict on update restrict;
+create index ix_sessions_student_id on sessions (student_id);
+alter table sessions add constraint fk_sessions_student_id foreign key (student_id) references users (id) on delete restrict on update restrict;
 
 
 -- !Downs
 
 -- drop all foreign keys
-alter table sessions drop foreign key fk_sessions_user_id;
-drop index ix_sessions_user_id on sessions;
+alter table sessions drop foreign key fk_sessions_student_id;
+drop index ix_sessions_student_id on sessions;
 
 -- drop all
 drop table if exists sessions;
