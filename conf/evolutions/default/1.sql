@@ -72,6 +72,7 @@ create table tutor_application (
   subject_expertise             varchar(255),
   bio                           varchar(255),
   tutor_email                   varchar(255),
+  status                        varchar(255),
   constraint pk_tutor_application primary key (id)
 );
 
@@ -82,6 +83,7 @@ create table users (
   role                          varchar(255),
   password                      varchar(255),
   bio                           varchar(255),
+  subscription                  varchar(255),
   constraint pk_users primary key (id)
 );
 
@@ -89,12 +91,18 @@ create table users (
 create index ix_sessions_student_id on sessions (student_id);
 alter table sessions add constraint fk_sessions_student_id foreign key (student_id) references users (id) on delete restrict on update restrict;
 
+create index ix_sessions_tutor_id on sessions (tutor_id);
+alter table sessions add constraint fk_sessions_tutor_id foreign key (tutor_id) references users (id) on delete restrict on update restrict;
+
 
 -- !Downs
 
 -- drop all foreign keys
 alter table sessions drop foreign key fk_sessions_student_id;
 drop index ix_sessions_student_id on sessions;
+
+alter table sessions drop foreign key fk_sessions_tutor_id;
+drop index ix_sessions_tutor_id on sessions;
 
 -- drop all
 drop table if exists sessions;

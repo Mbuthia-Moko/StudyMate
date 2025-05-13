@@ -1,4 +1,6 @@
-@(user: models.User, sessions: List[models.Session])
+@(user: models.User, sessions: List[models.Session], request: play.mvc.Http.Request)
+@import java.time.format.DateTimeFormatter
+
 
 @main("Home Page"){
 <!-- NAVBAR -->
@@ -19,6 +21,30 @@
         <li><a class="hover:text-red-600" href="logout">Log out</a></li>
     </ul>
 </nav>
+<div class="flex w-full items-end justify-end bg-[#ecf3fe] pt-2">
+@if(request.flash().get("standardSubscription").isPresent()) {
+<div class="mb-4 flex gap-2 items-center justify-between rounded-lg bg-green-100 p-4 text-green-800">
+    <span>@request.flash().get("standardSubscription").orElse("An error occurred")</span>
+    <button type="button" class="text-green-500 hover:text-green-700 cursor-pointer" onclick="this.parentElement.remove()">
+        &times;
+    </button>
+</div>
+} else if(request.flash().get("freeSubscription").isPresent()) {
+<div class="mb-4 flex items-center justify-between rounded-lg bg-green-100 p-4 text-green-800">
+    <span>@request.flash().get("freeSubscription").orElse("Success")</span>
+    <button type="button" class="text-green-500 hover:text-green-700" onclick="this.parentElement.remove()">
+        &times;
+    </button>
+</div>
+}else if(request.flash().get("premiumSubscription").isPresent()) {
+<div class="mb-4 flex items-center justify-between rounded-lg bg-green-100 p-4 text-green-800">
+    <span>@request.flash().get("premiumSubscription").orElse("Success")</span>
+    <button type="button" class="text-green-500 hover:text-green-700" onclick="this.parentElement.remove()">
+        &times;
+    </button>
+</div>
+}
+</div>
 
 <!-- MAIN DASHBOARD CONTENT -->
 <main class="flex-grow container mx-auto px-6 py-8">
@@ -73,7 +99,7 @@
             <div class="bg-white p-4 rounded-xl shadow hover:shadow-black flex justify-between items-center">
                 <div>
                     <p class="font-bold">@session.subjectDescription</p>
-                    <p class="text-sm text-gray-500 mt-1">@session.date_time</p>
+                    <p class="text-sm text-gray-500 mt-1">@session.date_time.format(DateTimeFormatter.ofPattern("MMM dd, yyyy 'at' hh:mm a"))</p>
                 </div>
                 <a href="sessionDetails" class="bg-[#4D63FF] text-white px-4 py-2 rounded-full hover:bg-[#3b4bbf] transition">View</a>
             </div>

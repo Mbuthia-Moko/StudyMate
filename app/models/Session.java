@@ -24,6 +24,10 @@ public class Session extends Model {
     public String status;
     public Integer duration;
 
+    @ManyToOne
+    @JoinColumn(name = "tutor_id")
+    public User tutor;
+
 
     public Integer getDuration() {
         return duration;
@@ -100,5 +104,13 @@ public class Session extends Model {
 
     public static void setFind(Finder<Long, Session> find) {
         Session.find = find;
+    }
+
+    public User getTutor() {
+        return tutor;
+    }
+
+    public void setTutor(User tutor) {
+        this.tutor = tutor;
     }
 }

@@ -1,4 +1,5 @@
 @(sessions: List[models.Session])
+@import java.time.format.DateTimeFormatter
 
 @main("Notifications Page"){
 <body class="bg-[#ecf3fe] flex flex-col min-h-screen">
@@ -32,8 +33,8 @@
         <div class="bg-white p-4 rounded-xl shadow flex items-start gap-4">
             <i class="fa-regular fa-bell text-2xl text-[#4D63FF] mt-1"></i>
             <div>
-                <p><span class="font-semibold">Reminder:</span> @session.subjectDescription session at @session.date_time.</p>
-                <p class="text-sm text-gray-500 mt-1">@session.date_time</p>
+                <p><span class="font-semibold">Reminder:</span> @session.subjectDescription session</p>
+                <p class="text-sm text-gray-500 mt-1">@session.date_time.format(DateTimeFormatter.ofPattern("MMM dd, yyyy 'at' hh:mm a"))</p>
             </div>
         </div>
         }

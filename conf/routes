@@ -35,15 +35,25 @@ GET /sessions controllers.HomeController.sessions(request: Request)
 
 GET /settings controllers.HomeController.settings(request: Request)
 
-GET /pricing controllers.HomeController.pricing()
+GET /pricing controllers.HomeController.pricing(request: Request)
 
 GET /admin controllers.HomeController.admin()
+
+GET /adminSettings controllers.HomeController.adminSettings(request: Request)
+
+GET /standardSubscription controllers.HomeController.standardSubscription(request: Request)
+GET /premiumSubscription controllers.HomeController.premiumSubscription(request: Request)
+GET /freeSubscription controllers.HomeController.freeSubscription(request: Request)
 
 #temporarily logout will return to home page
 GET /logout controllers.HomeController.logout(request: Request)
 
 #GET /sessionDetails controllers.HomeController.sessionDetails(request: Request)
 GET /approveTutor/:tutorId controllers.HomeController.approveTutor(tutorId: Long)
+GET /denyTutor/:tutorId controllers.HomeController.denyTutor(tutorId: Long)
+GET /rejectTutor/:tutorId controllers.HomeController.rejectTutor(tutorId: Long)
+GET /makeAdmin/:userId controllers.HomeController.makeAdmin(userId: Long)
+GET /deleteUser/:userId controllers.HomeController.deleteUser(userId: Long)
 
 POST /submitSession controllers.HomeController.submitSession(request: Request)
 

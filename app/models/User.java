@@ -17,9 +17,22 @@ public class User extends Model {
     public  String role;
     public String password;
     public String bio;
+    public String subscription;
 
-    @OneToMany
-    public List<Session> sessions;
+    @OneToMany(mappedBy = "tutor")
+    public List<Session> tutorSessions;
+
+    public String getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(String subscription) {
+        this.subscription = subscription;
+    }
+
+
+    @OneToMany(mappedBy = "student_id")
+    public List<Session> studentSessions;
 
     public static Finder<Long, User> find = new Finder<>(User.class);
 
@@ -93,11 +106,19 @@ public class User extends Model {
         this.bio = bio;
     }
 
-    public List<Session> getSessions() {
-        return sessions;
+    public List<Session> getTutorSessions() {
+        return tutorSessions;
     }
 
-    public void setSessions(List<Session> sessions) {
-        this.sessions = sessions;
+    public void setTutorSessions(List<Session> tutorSessions) {
+        this.tutorSessions = tutorSessions;
+    }
+
+    public List<Session> getStudentSessions() {
+        return studentSessions;
+    }
+
+    public void setStudentSessions(List<Session> studentSessions) {
+        this.studentSessions = studentSessions;
     }
 }

@@ -11,6 +11,7 @@ import play.mvc.*;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 //import javax.xml.transform.Result;
 
@@ -63,7 +64,7 @@ public class HomeController extends Controller {
 //        List<User> users = User.find.all();
 //        List<Session> sessions = Session.find.all();
 
-        return ok(views.html.home.render(user,sessions));
+        return ok(views.html.home.render(user,sessions, request));
     }
 
     public Result learn(){
@@ -78,8 +79,10 @@ public class HomeController extends Controller {
     public Result teach(Http.Request request){
         String email = request.session().get("user").get();
         TutorApplication tutor = TutorApplication.find.query().where().eq("tutor_email", email).setMaxRows(1).findOne();
+        User user = User.find.query().where().eq("email", email).findOne();
+        List<Session> sessions = Session.find.query().fetch("student_id") .where().eq("tutor_id", user.id).findList();
 
-        return ok(views.html.teach.render(request, tutor));
+        return ok(views.html.teach.render(request, tutor, user, sessions));
     }
 
     public Result notifications(Http.Request request){
@@ -122,14 +125,46 @@ public class HomeController extends Controller {
         return ok(views.html.settings.render(user));
     }
 
-    public Result pricing(){return ok(views.html.pricing.render());}
+    public Result pricing(Http.Request request){
+        String email = request.session().get("user").get();
+        User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
+        return ok(views.html.pricing.render(user));
+    }
+    public Result standardSubscription(Http.Request request){
+        String email = request.session().get("user").get();
+        User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
+
+        user.setSubscription("standard, Ksh700/=");
+        user.update();
+        return redirect(routes.HomeController.home()).flashing("standardSubscription", "You are now on standard subscription");
+    }
+    public Result freeSubscription(Http.Request request){
+        DynamicForm data = formFactory.form().bindFromRequest(request);
+        String email = request.session().get("user").get();
+        User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
+
+        user.setSubscription("free, Ksh 0/=");
+        user.update();
+        return redirect(routes.HomeController.home()).flashing("freeSubscription", "You are now on free subscription");
+    }
+    public Result premiumSubscription(Http.Request request){
+        DynamicForm data = formFactory.form().bindFromRequest(request);
+        String email = request.session().get("user").get();
+        User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
+
+        user.setSubscription("premium, Ksh1,500/=");
+        user.update();
+        return redirect(routes.HomeController.home()).flashing("premiumSubscription", "You are now on premium subscription");
+    }
 
     public Result sessionDetails(Long SessionId, Http.Request request){
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
+//        List<Session> sessions = Session.find.query().fetch("student_id") .where().eq("tutor_id", user.id).findList();
+
 
 //        String userType = "tutor";
-        Session sessionDetails = Session.find.query().where().eq("id", SessionId).findOne();
+        Session sessionDetails = Session.find.query().fetch("tutor").where().eq("id", SessionId).findOne();
 
 //        List <User> tutors = User.find.query().where().eq("role", "tutors").findList();
         //
@@ -147,10 +182,18 @@ public class HomeController extends Controller {
 
         User user = User.findUser(email, password);
         if (user != null) {
-            return redirect(routes.HomeController.home()).addingToSession(request,"user", user.email);
+            if (Objects.equals(user.role, "tutor")){
+                return redirect(routes.HomeController.home()).addingToSession(request,"user", user.email);
+            }
+            if (Objects.equals(user.role, "admin")){
+                return redirect(routes.HomeController.admin()).addingToSession(request,"user", user.email);
+            }
+            if (Objects.equals(user.role, "student")){
+                return redirect(routes.HomeController.home()).addingToSession(request,"user", user.email);
+            }
         }
 
-        return badRequest(views.html.login.render(request)).flashing("error", "Wrong Username or Password");
+        return redirect(routes.HomeController.login()).flashing("error", "Wrong Username or Password");
     }
 
     public Result signupUser(Http.Request request) {
@@ -162,7 +205,7 @@ public class HomeController extends Controller {
         String userType = data.get("userType");
         String bio = data.get("bio");
         if(email.isEmpty() || password.isEmpty()) {
-            return badRequest(views.html.signup.render(request)).flashing("error", "Wrong Username or Password");
+            return redirect(routes.HomeController.signup()).flashing("error", "Empty Username or Password");
         }
 
         User user = new User();
@@ -177,13 +220,14 @@ public class HomeController extends Controller {
 //        User user1 = User.find.byId(1L);
 //        List<User> users = User.find.query().where().eq("role", "student").findList();
 
-        return redirect(routes.HomeController.login());
+        return redirect(routes.HomeController.pricing()).addingToSession(request,"user", user.email);
 
     }
     public Result tutorApplication(Http.Request request){
         DynamicForm data = formFactory.form().bindFromRequest(request);
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
+        List <Session> sessions = Session.find.query().where().eq("tutor_id", user.id).findList();
 
 
         Long User_id = user.id;
@@ -200,8 +244,9 @@ public class HomeController extends Controller {
         tutor.setSubject_expertise(subjects);
         tutor.setBio(bio);
         tutor.setTutor_email(email1);
+        tutor.setStatus("pending");
         tutor.save();
-        return ok(views.html.teach.render(request, tutor));
+        return ok(views.html.teach.render(request, tutor, user, sessions));
     }
     public Result admin(){
         List<User> users = User.find.all();
@@ -243,17 +288,82 @@ public class HomeController extends Controller {
         session.save();
 
         List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
-        return ok(views.html.sessions.render(sessions));
+//        return ok(views.html.sessions.render(sessions));
+        return redirect(routes.HomeController.sessions());
     }
     public Result approveTutor(Long tutorId){
         List<User> users = User.find.all();
         List<TutorApplication> tutors = TutorApplication.find.all();
         User user = User.find.query().where().eq("id", tutorId).findOne();
+//        Long currentTutorId = TutorApplication.find.byId(tutorId);
+        TutorApplication tutor = TutorApplication.find.query().where().eq("user_id", tutorId).findOne();
+        String tutorStatus = "approved";
+
+        tutor.setStatus(tutorStatus);
+        tutor.update();
 
         String role = "tutor";
         user.setRole(role);
 
         user.update();
-        return ok(views.html.admin.render(users, tutors));
+//        return ok(views.html.admin.render(users, tutors));
+        return redirect(routes.HomeController.admin());
+    }
+    public Result rejectTutor(Long tutorId){
+        List<User> users = User.find.all();
+        List<TutorApplication> tutors = TutorApplication.find.all();
+        User user = User.find.query().where().eq("id", tutorId).findOne();
+//        Long currentTutorId = TutorApplication.find.byId(tutorId);
+        TutorApplication tutor = TutorApplication.find.query().where().eq("user_id", tutorId).findOne();
+        String tutorStatus = "rejected";
+
+        tutor.setStatus(tutorStatus);
+        tutor.update();
+        String role = "student";
+        user.setRole(role);
+        user.update();
+//        return ok(views.html.admin.render(users, tutors));
+        return redirect(routes.HomeController.admin());
+    }
+    public Result denyTutor(Long tutorId){
+        List<User> users = User.find.all();
+        List<TutorApplication> tutors = TutorApplication.find.all();
+        User user = User.find.query().where().eq("id", tutorId).findOne();
+//        Long currentTutorId = TutorApplication.find.byId(tutorId);
+        TutorApplication tutor = TutorApplication.find.query().where().eq("user_id", tutorId).findOne();
+        String tutorStatus = "denied";
+
+        tutor.setStatus(tutorStatus);
+        tutor.update();
+        String role = "student";
+        user.setRole(role);
+        user.update();
+//        return ok(views.html.admin.render(users, tutors));
+        return redirect(routes.HomeController.admin());
+    }
+    public Result makeAdmin(Long userId){
+        List<User> users = User.find.all();
+        List<TutorApplication> tutors = TutorApplication.find.all();
+        User user = User.find.query().where().eq("id", userId).findOne();
+
+        String role = "admin";
+        user.setRole(role);
+        user.update();
+//        return ok(views.html.admin.render(users, tutors));
+        return redirect(routes.HomeController.admin());
+    }
+    public Result deleteUser(Long userId){
+        List<User> users = User.find.all();
+        List<TutorApplication> tutors = TutorApplication.find.all();
+
+        User user = User.find.query().where().eq("id", userId).findOne();
+        user.delete();
+//        return ok(views.html.admin.render(users, tutors));
+        return redirect(routes.HomeController.admin());
+    }
+    public Result adminSettings(Http.Request request){
+        String email = request.session().get("user").get();
+        User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
+        return ok(views.html.adminSettings.render(user));
     }
 }
