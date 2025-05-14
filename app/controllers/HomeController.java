@@ -98,7 +98,8 @@ public class HomeController extends Controller {
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
 
         List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
-        return ok(views.html.sessions.render(sessions));
+        List <Session> teacherSessions = Session.find.query().where().eq("tutor_id", user.getId()).findList();
+        return ok(views.html.sessions.render(sessions, teacherSessions));
     }
 
     public Result settings(Http.Request request){
@@ -160,15 +161,8 @@ public class HomeController extends Controller {
     public Result sessionDetails(Long SessionId, Http.Request request){
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
-//        List<Session> sessions = Session.find.query().fetch("student_id") .where().eq("tutor_id", user.id).findList();
+        Session sessionDetails = Session.find.query().fetch("tutor").fetch("student_id").where().eq("id", SessionId).findOne();
 
-
-//        String userType = "tutor";
-        Session sessionDetails = Session.find.query().fetch("tutor").where().eq("id", SessionId).findOne();
-
-//        List <User> tutors = User.find.query().where().eq("role", "tutors").findList();
-        //
-//        List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
         return ok(views.html.sessionDetails.render(sessionDetails));
     }
 
@@ -365,5 +359,81 @@ public class HomeController extends Controller {
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
         return ok(views.html.adminSettings.render(user));
+    }
+    public Result acceptRequest(Long sessionId){
+        List<Session> sessions = Session.find.all();
+        Session session = Session.find.query().where().eq("id", sessionId).setMaxRows(1).findOne();
+
+        session.setStatus("confirmed");
+        session.update();
+
+        return redirect(routes.HomeController.teach());
+
+    }
+    public Result refuseRequest(Long sessionId){
+        List<Session> sessions = Session.find.all();
+        Session session = Session.find.query().where().eq("id", sessionId).setMaxRows(1).findOne();
+
+        session.setStatus("rejected");
+        session.update();
+
+        return redirect(routes.HomeController.teach());
+
+    }
+    public Result sessionDetailsTutorView(Long SessionId, Http.Request request){
+        String email = request.session().get("user").get();
+        User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
+        Session sessionDetails = Session.find.query().fetch("tutor").fetch("student_id").where().eq("id", SessionId).findOne();
+        return ok(views.html.sessionDetailsTutorView.render(sessionDetails));
+    }
+
+    public Result cancelRequestTutor(Long sessionId){
+        List<Session> sessions = Session.find.all();
+        Session session = Session.find.query().where().eq("id", sessionId).setMaxRows(1).findOne();
+
+        session.setStatus("cancelled");
+        session.update();
+
+        return redirect(routes.HomeController.sessionDetailsTutorView(sessionId));
+    }
+    public Result completeRequestTutor(Long sessionId){
+        List<Session> sessions = Session.find.all();
+        Session session = Session.find.query().where().eq("id", sessionId).setMaxRows(1).findOne();
+
+        session.setStatus("completed");
+        session.update();
+
+        return redirect(routes.HomeController.sessionDetailsTutorView(sessionId));
+    }
+
+    public Result acceptRequestTutor(Long sessionId){
+        List<Session> sessions = Session.find.all();
+        Session session = Session.find.query().where().eq("id", sessionId).setMaxRows(1).findOne();
+
+        session.setStatus("confirmed");
+        session.update();
+
+        return redirect(routes.HomeController.sessionDetailsTutorView(sessionId));
+
+    }
+
+    public Result rejectRequestTutor(Long sessionId){
+        List<Session> sessions = Session.find.all();
+        Session session = Session.find.query().where().eq("id", sessionId).setMaxRows(1).findOne();
+
+        session.setStatus("rejected");
+        session.update();
+
+        return redirect(routes.HomeController.sessionDetailsTutorView(sessionId));
+    }
+
+    public Result cancelRequestStudent(Long sessionId){
+        List<Session> sessions = Session.find.all();
+        Session session = Session.find.query().where().eq("id", sessionId).setMaxRows(1).findOne();
+
+        session.setStatus("cancelled");
+        session.update();
+
+        return redirect(routes.HomeController.sessionDetails(sessionId));
     }
 }

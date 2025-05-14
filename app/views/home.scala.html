@@ -21,7 +21,7 @@
         <li><a class="hover:text-red-600" href="logout">Log out</a></li>
     </ul>
 </nav>
-<div class="flex w-full items-end justify-end bg-[#ecf3fe] pt-2">
+<div class="flex w-full items-end justify-end  pt-2 absolute z-0">
 @if(request.flash().get("standardSubscription").isPresent()) {
 <div class="mb-4 flex gap-2 items-center justify-between rounded-lg bg-green-100 p-4 text-green-800">
     <span>@request.flash().get("standardSubscription").orElse("An error occurred")</span>
@@ -47,11 +47,11 @@
 </div>
 
 <!-- MAIN DASHBOARD CONTENT -->
-<main class="flex-grow container mx-auto px-6 py-8">
+<main class="flex-grow container mx-auto px-6 py-8 z-20">
     <h1 class="text-3xl font-bold text-[#1f2945] mb-6">Welcome back, <span class="text-[#4D63FF]">@user.name</span>!</h1>
 
     <!-- Quick Actions -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 z-20">
         <a href="learn" class="bg-white shadow-lg rounded-xl p-6 flex items-center gap-4 hover:shadow-black transition">
             <i class="fa-solid fa-user-group text-3xl text-[#4D63FF]"></i>
             <div>
