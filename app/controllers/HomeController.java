@@ -123,7 +123,7 @@ public class HomeController extends Controller {
 //        List<User> users = User.find.all();
 //        User user1 = User.find.byId(1L);
 
-        return ok(views.html.settings.render(user));
+        return ok(views.html.settings.render(user, request));
     }
 
     public Result pricing(Http.Request request){
@@ -210,10 +210,6 @@ public class HomeController extends Controller {
         user.setBio(bio);
         user.save();
 
-
-//        User user1 = User.find.byId(1L);
-//        List<User> users = User.find.query().where().eq("role", "student").findList();
-
         return redirect(routes.HomeController.pricing()).addingToSession(request,"user", user.email);
 
     }
@@ -258,11 +254,16 @@ public class HomeController extends Controller {
     public Result submitSession(Http.Request request){
         DynamicForm data = formFactory.form().bindFromRequest(request);
 
+// Get the currently logged-in user from session
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
 
         Long student_id = user.id;
-        Long tutor_id = Long.valueOf(data.get("tutorId"));
+        String tutor_id_str = data.get("tutorId");
+        Long tutor_id = Long.parseLong(tutor_id_str); // Convert to Long
+
+        User tutor = User.find.byId(tutor_id); // Look up the tutor user
+
         String subjectDescription = data.get("topic");
         String location = data.get("location");
         LocalDateTime date_time = LocalDateTime.parse(data.get("dateTime"));
@@ -271,8 +272,8 @@ public class HomeController extends Controller {
 
         Session session = new Session();
 
-        session.setStudent_id(user);
-        session.setTutor_id(tutor_id);
+        session.setStudent_id(user);     // student is the current user
+        session.setTutor(tutor);         // now passing a proper User object
         session.setSubjectDescription(subjectDescription);
         session.setLocation(location);
         session.setDate_time(date_time);
@@ -282,7 +283,6 @@ public class HomeController extends Controller {
         session.save();
 
         List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
-//        return ok(views.html.sessions.render(sessions));
         return redirect(routes.HomeController.sessions());
     }
     public Result approveTutor(Long tutorId){
@@ -358,7 +358,7 @@ public class HomeController extends Controller {
     public Result adminSettings(Http.Request request){
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
-        return ok(views.html.adminSettings.render(user));
+        return ok(views.html.adminSettings.render(user,request));
     }
     public Result acceptRequest(Long sessionId){
         List<Session> sessions = Session.find.all();
@@ -435,5 +435,45 @@ public class HomeController extends Controller {
         session.update();
 
         return redirect(routes.HomeController.sessionDetails(sessionId));
+    }
+    public Result changeDetailsAdminSettings(Http.Request request, Long userId){
+        DynamicForm data = formFactory.form().bindFromRequest(request);
+
+        String name = data.get("name");
+        String email = data.get("email");
+        String password = data.get("password");
+        String bio = data.get("bio");
+        if(email.isEmpty() || password.isEmpty() || bio.isEmpty() || name.isEmpty()) {
+            return redirect(routes.HomeController.adminSettings()).flashing("error", "Empty Username or Password");
+        }
+
+        User user = User.find.query().where().eq("id", userId).setMaxRows(1).findOne();
+        user.setName(name);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setBio(bio);
+        user.update();
+
+        return redirect(routes.HomeController.adminSettings()).flashing("success", "Details changed successfully");
+    }
+    public Result changeDetailsSettings(Http.Request request, Long userId){
+        DynamicForm data = formFactory.form().bindFromRequest(request);
+
+        String name = data.get("name");
+        String email = data.get("email");
+        String password = data.get("password");
+        String bio = data.get("bio");
+        if(email.isEmpty() || password.isEmpty() || bio.isEmpty() || name.isEmpty()) {
+            return redirect(routes.HomeController.settings()).flashing("error", "Empty Username or Password");
+        }
+
+        User user = User.find.query().where().eq("id", userId).setMaxRows(1).findOne();
+        user.setName(name);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setBio(bio);
+        user.update();
+
+        return redirect(routes.HomeController.settings()).flashing("success", "Details changed successfully");
     }
 }

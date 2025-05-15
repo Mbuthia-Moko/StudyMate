@@ -64,7 +64,9 @@ GET /acceptRequestTutor/:sessionId controllers.HomeController.acceptRequestTutor
 GET /rejectRequestTutor/:sessionId controllers.HomeController.rejectRequestTutor(sessionId: Long)
 
 POST /submitSession controllers.HomeController.submitSession(request: Request)
+POST /changeDetailsAdminSettings/:userId controllers.HomeController.changeDetailsAdminSettings(request: Request, userId: Long)
 
+POST /changeDetailsSettings/:userId controllers.HomeController.changeDetailsSettings(request: Request, userId: Long)
 GET /sessionDetailsTutorView/:sessionId controllers.HomeController.sessionDetailsTutorView(sessionId: Long,request: Request )
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

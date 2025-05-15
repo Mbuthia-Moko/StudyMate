@@ -16,7 +16,7 @@ public class Session extends Model {
     @JoinColumn(name = "student_id")
     public User student_id;
 
-    public Long tutor_id;
+//    public Long tutor_id;
     @Column(name = "subjectDescription")
     public String subjectDescription;
     public String location;
@@ -54,14 +54,6 @@ public class Session extends Model {
 
     public void setStudent_id(User student_id) {
         this.student_id = student_id;
-    }
-
-    public Long getTutor_id() {
-        return tutor_id;
-    }
-
-    public void setTutor_id(Long tutor_id) {
-        this.tutor_id = tutor_id;
     }
 
     public String getSubjectDescription() {

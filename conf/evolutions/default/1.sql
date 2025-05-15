@@ -56,12 +56,12 @@ $$
 create table sessions (
   id                            bigint auto_increment not null,
   student_id                    bigint,
-  tutor_id                      bigint,
   subjectDescription            varchar(255),
   location                      varchar(255),
   date_time                     datetime,
   status                        varchar(255),
   duration                      integer,
+  tutor_id                      bigint,
   constraint pk_sessions primary key (id)
 );
 

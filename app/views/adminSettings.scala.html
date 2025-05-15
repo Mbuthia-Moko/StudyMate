@@ -1,4 +1,5 @@
-@(user: models.User)
+@(user: models.User)(implicit request : play.mvc.Http.Request)
+@import helper._
 
 @main("Settings Page"){
 <!-- NAVBAR -->
@@ -23,50 +24,28 @@
 
     <section class="bg-white shadow-lg rounded-xl p-6 mb-8">
         <h2 class="text-2xl font-semibold mb-4">Profile Information</h2>
-        <form class="space-y-4">
+        <form method="post" action="@routes.HomeController.changeDetailsAdminSettings(user.id)" class="space-y-4">
+            @CSRF.formField
             <div>
                 <label class="block text-gray-700 font-medium mb-1" for="name">Full Name</label>
-                <input id="name" type="text" value="@user.name" class="w-full border rounded-lg p-2" disabled/>
-                @*<p>@User.getName</p>*@
+                <input id="name" type="text" name="name" value="@user.name" class="w-full border rounded-lg p-2"/>
             </div>
             <div>
                 <label class="block text-gray-700 font-medium mb-1" for="email">Email Address</label>
-                <input id="email" type="email" value="@user.email" class="w-full border rounded-lg p-2" disabled />
+                <input id="email" type="email" name="email" value="@user.email" class="w-full border rounded-lg p-2"/>
             </div>
             <div>
-                <label class="block text-gray-700 font-medium mb-1" for="password">Change Password</label>
-                <input id="password" type="password" value="@user.password" class="w-full border rounded-lg p-2" disabled/>
+                <label class="block text-gray-700 font-medium mb-1" for="bio">Bio</label>
+                <input id="bio" type="text" name="bio" value="@user.bio" class="w-full border rounded-lg p-2"/>
             </div>
-            <button type="submit" class="bg-[#4D63FF] text-white px-6 py-2 rounded-full hover:bg-[#3b4bbf] transition">Edit Profile</button>
+            <div>
+                <label class="block text-gray-700 font-medium mb-1" for="password">Password</label>
+                <input id="password" type="password" name="password" value="@user.password" class="w-full border rounded-lg p-2"/>
+            </div>
+            <button type="submit" class="bg-[#4D63FF] text-white px-6 py-2 rounded-full hover:bg-[#3b4bbf] transition">Save Changes</button>
         </form>
     </section>
 
-<!--    <section class="bg-white shadow-lg rounded-xl p-6 mb-8">-->
-<!--        <h2 class="text-2xl font-semibold mb-4">Preferences</h2>-->
-<!--        <form class="space-y-4">-->
-<!--            <div class="flex items-center justify-between">-->
-<!--                <span class="text-gray-700">Receive Email Notifications</span>-->
-<!--                <label>-->
-<!--                    <input type="checkbox" class="h-5 w-5 text-[#4D63FF]" />-->
-<!--                </label>-->
-<!--            </div>-->
-<!--            <div class="flex items-center justify-between">-->
-<!--                <span class="text-gray-700">Dark Mode</span>-->
-<!--                <label>-->
-<!--                    <input type="checkbox" class="h-5 w-5 text-[#4D63FF]" />-->
-<!--                </label>-->
-<!--            </div>-->
-<!--            <button type="submit" class="bg-[#4D63FF] text-white px-6 py-2 rounded-full hover:bg-[#3b4bbf] transition">Save Preferences</button>-->
-<!--        </form>-->
-<!--    </section>-->
-
-<!--    <section class="bg-white shadow-lg rounded-xl p-6">-->
-<!--        <h2 class="text-2xl font-semibold mb-4">Subscription</h2>-->
-<!--        <div class="space-y-4">-->
-<!--            <p class="text-gray-700">Current Plan: <span class="font-semibold">Standard (700 Ksh/mo)</span></p>-->
-<!--            <a href="pricing" class="inline-block bg-[#4D63FF] text-white px-6 py-2 rounded-full hover:bg-[#3b4bbf] transition">Change Plan</a>-->
-<!--        </div>-->
-<!--    </section>-->
 </main>
 
 <!-- FOOTER -->
@@ -115,9 +94,4 @@
         </div>
     </div>
 </footer>
-<!--<div>-->
-<!--&lt;!&ndash;    @@for(user <- users) {&ndash;&gt;-->
-<!--&lt;!&ndash;        <p>@user.name</p>&ndash;&gt;-->
-<!--&lt;!&ndash;    }&ndash;&gt;-->
-<!--</div>-->
 }
