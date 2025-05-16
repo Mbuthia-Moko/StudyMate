@@ -1,4 +1,4 @@
-@(sessions: List[models.Session])
+@(sessions: List[models.Session], teacherSessions: List[models.Session])
 @import java.time.format.DateTimeFormatter
 
 @main("Notifications Page"){
@@ -39,15 +39,20 @@
         </div>
         }
         }
+        <!--            Tutor Sessions-->
+        @if(teacherSessions.nonEmpty){
+        <h2 class="text-2xl font-semibold text-[#1f2945] mb-4" >Tutoring Notifications</h2>
+        }
 
-        <!-- Build for loop for messages here -->
-<!--        <div class="bg-white p-4 rounded-xl shadow flex items-start gap-4">-->
-<!--            <i class="fa-regular fa-bell text-2xl text-[#4D63FF] mt-1"></i>-->
-<!--            <div>-->
-<!--                <p><span class="font-semibold">Reminder:</span> Python session at 6:00 PM tommorow.</p>-->
-<!--                <p class="text-sm text-gray-500 mt-1">tommorow, 6:00 PM</p>-->
-<!--            </div>-->
-<!--        </div>-->
+        @for(teacherSession <- teacherSessions){
+        <div class="bg-white p-4 rounded-xl shadow flex items-start gap-4">
+            <i class="fa-regular fa-bell text-2xl text-[#4D63FF] mt-1"></i>
+            <div>
+                <p><span class="font-semibold">Reminder:</span> @teacherSession.subjectDescription session</p>
+                <p class="text-sm text-gray-500 mt-1">@teacherSession.date_time.format(DateTimeFormatter.ofPattern("MMM dd, yyyy 'at' hh:mm a"))</p>
+            </div>
+        </div>
+        }
 
     </div>
 </main>

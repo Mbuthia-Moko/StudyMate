@@ -60,11 +60,10 @@ public class HomeController extends Controller {
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
 
-        List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
-//        List<User> users = User.find.all();
-//        List<Session> sessions = Session.find.all();
+        List<Session> sessions = Session.find.query().where().eq("student_id", user).orderBy("date_time").findList();
+        List <Session> teacherSessions = Session.find.query().where().eq("tutor_id", user.getId()).orderBy("date_time").findList();
 
-        return ok(views.html.home.render(user,sessions, request));
+        return ok(views.html.home.render(user,sessions, request, teacherSessions));
     }
 
     public Result learn(){
@@ -80,7 +79,7 @@ public class HomeController extends Controller {
         String email = request.session().get("user").get();
         TutorApplication tutor = TutorApplication.find.query().where().eq("tutor_email", email).setMaxRows(1).findOne();
         User user = User.find.query().where().eq("email", email).findOne();
-        List<Session> sessions = Session.find.query().fetch("student_id") .where().eq("tutor_id", user.id).findList();
+        List<Session> sessions = Session.find.query().fetch("student_id") .where().eq("tutor_id", user.id).orderBy("date_time").findList();
 
         return ok(views.html.teach.render(request, tutor, user, sessions));
     }
@@ -89,39 +88,24 @@ public class HomeController extends Controller {
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
 
-        List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
-        return ok(views.html.notifications.render(sessions));
+        List <Session> teacherSessions = Session.find.query().where().eq("tutor_id", user.getId()).orderBy("date_time").findList();
+        List<Session> sessions = Session.find.query().where().eq("student_id", user).orderBy("date_time").findList();
+
+        return ok(views.html.notifications.render(sessions, teacherSessions));
     }
 
     public Result sessions(Http.Request request){
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
 
-        List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
-        List <Session> teacherSessions = Session.find.query().where().eq("tutor_id", user.getId()).findList();
+        List<Session> sessions = Session.find.query().where().eq("student_id", user).orderBy("date_time").findList();
+        List <Session> teacherSessions = Session.find.query().where().eq("tutor_id", user.getId()).orderBy("date_time").findList();
         return ok(views.html.sessions.render(sessions, teacherSessions));
     }
 
     public Result settings(Http.Request request){
-/*
-    Static user addition to db example, save acts as insert if data doesn't exist & update if it does exist
-        User u = new User();
-        u.setId(1L);
-        u.setEmail("mbuthiamoko@gmail.com");
-        u.setName("Mbuthia Moko");
-        u.setRole("Student");
-        u.setPassword("C0nvincingPassw0rd");
-        u.save();
-
-        User u2 = new User(1L,"ALex", "alex@gmail.com", "student", "AlexL0v3sG0D");
-        u2.save();
-*/
         String email = request.session().get("user").get();
         User user = User.find.query().where().eq("email", email).setMaxRows(1).findOne();
-
-//        List<Session> sessions = Session.find.query().where().eq("user.id", user.id).findList();
-//        List<User> users = User.find.all();
-//        User user1 = User.find.byId(1L);
 
         return ok(views.html.settings.render(user, request));
     }
@@ -282,7 +266,7 @@ public class HomeController extends Controller {
 
         session.save();
 
-        List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
+//        List<Session> sessions = Session.find.query().where().eq("student_id", user).findList();
         return redirect(routes.HomeController.sessions());
     }
     public Result approveTutor(Long tutorId){
